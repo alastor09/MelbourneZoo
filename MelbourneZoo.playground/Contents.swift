@@ -75,7 +75,7 @@ typealias EatingTravelAnimals =  Animal & MeatPortion & Travel & CustomStringCon
 
 extension CustomStringConvertible where Self: Animal{
     var description: String {
-        return "Animal: \(name)\n"
+        return "Animal: \(name)"
     }
 }
 
@@ -214,7 +214,7 @@ koala.sex
 polarBear.meatPortion { (portion) in
     switch portion{
     case .portion(let meatValue):
-        print(meatValue)
+        print("polar bear can eat: \(meatValue) grams")
     case .error(let errorString):
         print(errorString)
     }
@@ -223,7 +223,7 @@ polarBear.meatPortion { (portion) in
 elephant.meatPortion { (portion) in
     switch portion{
     case .portion(let meatValue):
-        print(meatValue)
+        print("elephant can eat: \(meatValue) grams")
     case .error(let errorString):
         print(errorString)
     }
@@ -232,7 +232,7 @@ elephant.meatPortion { (portion) in
 koala.meatPortion { (portion) in
     switch portion{
     case .portion(let meatValue):
-        print(meatValue)
+        print("koala can eat: \(meatValue) grams")
     case .error(let errorString):
         print(errorString)
     }
@@ -253,12 +253,18 @@ zoo += koala
 zoo.allAnimals()
 zoo.numberOfAnimals
 
-print(koala.canTravel(with: lion))
-print(polarBear.canTravel(with: lion))
-print(elephant.canTravel(with: koala))
-
 let animalsTravelling = animalsTravelTogether(animals: zoo.allAnimals())
-print("Animals Traveling Together:\n \(animalsTravelling)")
+if let carnivoresAnimal = animalsTravelling[Diet.carnivore]{
+    print("Carnivores Traveling seperately:\n \(carnivoresAnimal)")
+}
+
+if let herbivoreAnimal = animalsTravelling[Diet.herbivore]{
+    print("Herbivore Traveling together:\n \(herbivoreAnimal)")
+}
+
+print("Can Koala travel with lion: \(koala.canTravel(with: lion))")
+print("Can polarBear travel with lion: \(polarBear.canTravel(with: lion))")
+print("Can elephant travel with lion: \(elephant.canTravel(with: koala))")
 
 let truckAnimals = animalsWithBiggerEnclosureSize(size: .large, animals: zoo.allAnimals())
 print("Needs truck to transport:\n \(truckAnimals)")
