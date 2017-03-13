@@ -21,6 +21,7 @@ enum Diet: Int{
     case herbivore
 }
 
+
 protocol Animal{
     var name: String { get }
     var sex: Sex { get }
@@ -71,7 +72,16 @@ protocol EnclosureSize{
     func enclosureSize() -> Double
 }
 
-struct Mammal: Animal, Swimable, EnclosureSize, MeatPortion, Travel{
+typealias EatingTravelAnimals =  Animal & MeatPortion & Travel & CustomStringConvertible
+
+extension CustomStringConvertible where Self: Animal{
+    var description: String {
+        return "My Name: \(name)"
+    }
+}
+
+
+struct Mammal: EatingTravelAnimals, Swimable, EnclosureSize{
     let name: String
     let sex: Sex
     let size: Size
@@ -84,7 +94,7 @@ struct Mammal: Animal, Swimable, EnclosureSize, MeatPortion, Travel{
     }
 }
 
-struct Fish: Animal, Swimable, AdjustedSpeed, MeatPortion, Travel{
+struct Fish: EatingTravelAnimals, Swimable, AdjustedSpeed{
     let name: String
     let sex: Sex
     let size: Size
@@ -95,10 +105,9 @@ struct Fish: Animal, Swimable, AdjustedSpeed, MeatPortion, Travel{
     func adjustedSpeed() -> Double {
         return (swimSpeed/weight) / Double(age)
     }
-    
 }
 
-struct Bird: Animal, Swimable, MeatPortion, Travel{
+struct Bird: EatingTravelAnimals, Swimable{
     let name: String
     let sex: Sex
     let size: Size
@@ -107,7 +116,7 @@ struct Bird: Animal, Swimable, MeatPortion, Travel{
     let diet: Diet
 }
 
-struct Reptile: Animal, Swimable, MeatPortion, Travel{
+struct Reptile: EatingTravelAnimals, Swimable{
     let name: String
     let sex: Sex
     let size: Size
@@ -117,7 +126,7 @@ struct Reptile: Animal, Swimable, MeatPortion, Travel{
     
 }
 
-struct Invertebrate: Animal, MeatPortion, Travel{
+struct Invertebrate: EatingTravelAnimals{
     let name: String
     let sex: Sex
     let size: Size
@@ -149,6 +158,10 @@ struct MelbourneZoo<T> {
     
     func allAnimals() -> [T] {
         return animals
+    }
+    
+    func allTypes<U>() -> [U] {
+        return animals.filter { $0 is U }.map { $0 as! U }
     }
 }
 
@@ -192,13 +205,11 @@ let seal = Mammal(name: "Seal", sex: .male, size: .medium, age: 3, weight: 75, d
 let koala = Mammal(name: "Koala", sex: .female, size: .medium, age: 2, weight: 15, diet: .herbivore)
 
 
-
 polarBear.swimSpeed
 shark.adjustedSpeed()
 snake.swimSpeed
 lion.swimSpeed
 polarBear.enclosureSize()
-
 koala.swimSpeed
 koala.sex
 
@@ -251,4 +262,9 @@ let animalsTravelling = animalsTravelTogether(animals: zoo.allAnimals())
 print(animalsTravelling)
 
 let truckAnimals = animalsWithBiggerEnclosureSize(size: .large, animals: zoo.allAnimals())
-print(truckAnimals)
+print("Needs to be \(truckAnimals)")
+
+
+let animls = (zoo.allTypes() as [Mammal]).sorted(by: { return $0.enclosureSize() > $1.enclosureSize() })
+print(animls)
+
