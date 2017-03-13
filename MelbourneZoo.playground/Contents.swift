@@ -36,7 +36,7 @@ protocol Travel{
 
 extension Travel where Self: Animal{
     func canTravel(with animal: Animal) -> Bool{
-        return self.diet == animal.diet
+        return diet == .carnivore ? false :  diet == animal.diet
     }
 }
 
@@ -166,7 +166,7 @@ struct MelbourneZoo<T> {
 func animalsTravelTogether(animals: [Animal]) -> [Diet: [Animal]]{
     var animalsWithDiet: [Diet: [Animal]] = [:]
     for diet in iterateEnum(Diet.self){
-        let dietAnimal = animals.filter({ return $0.diet.rawValue == diet.rawValue})
+        let dietAnimal = animals.filter({ return $0.diet == diet})
         animalsWithDiet[diet] = dietAnimal
     }
     return animalsWithDiet
@@ -255,6 +255,7 @@ zoo.numberOfAnimals
 
 print(koala.canTravel(with: lion))
 print(polarBear.canTravel(with: lion))
+print(elephant.canTravel(with: koala))
 
 let animalsTravelling = animalsTravelTogether(animals: zoo.allAnimals())
 print("Animals Traveling Together:\n \(animalsTravelling)")
