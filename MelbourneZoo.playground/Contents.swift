@@ -21,7 +21,6 @@ enum Diet: Int{
     case herbivore
 }
 
-
 protocol Animal{
     var name: String { get }
     var sex: Sex { get }
@@ -76,10 +75,9 @@ typealias EatingTravelAnimals =  Animal & MeatPortion & Travel & CustomStringCon
 
 extension CustomStringConvertible where Self: Animal{
     var description: String {
-        return "My Name: \(name)"
+        return "Animal: \(name)\n"
     }
 }
-
 
 struct Mammal: EatingTravelAnimals, Swimable, EnclosureSize{
     let name: String
@@ -255,16 +253,16 @@ zoo += koala
 zoo.allAnimals()
 zoo.numberOfAnimals
 
-koala.canTravel(with: lion)
-polarBear.canTravel(with: lion)
+print(koala.canTravel(with: lion))
+print(polarBear.canTravel(with: lion))
 
 let animalsTravelling = animalsTravelTogether(animals: zoo.allAnimals())
-print(animalsTravelling)
+print("Animals Traveling Together:\n \(animalsTravelling)")
 
 let truckAnimals = animalsWithBiggerEnclosureSize(size: .large, animals: zoo.allAnimals())
-print("Needs to be \(truckAnimals)")
+print("Needs truck to transport:\n \(truckAnimals)")
 
 
-let animls = (zoo.allTypes() as [Mammal]).sorted(by: { return $0.enclosureSize() > $1.enclosureSize() })
-print(animls)
+let animalsEnclosed = (zoo.allTypes() as [Mammal]).sorted(by: { return $0.enclosureSize() < $1.enclosureSize() })
+print("Animals with enclosure Size in increasing order:\n \(animalsEnclosed)")
 
